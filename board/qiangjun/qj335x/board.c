@@ -58,10 +58,40 @@ static struct emif_regs ddr3_emif_reg_data = {
 	.emif_ddr_phy_ctlr_1 = K4B2G1646EBIH9_EMIF_READ_LATENCY,
 };
 
+static const struct ddr_data ddr3_ok335x_data = {
+	.datardsratio0 = H5TQ4G63AFR_DATA_RD_DQS,
+	.datawdsratio0 = H5TQ4G63AFR_DATA_WR_DQS,
+	.datafwsratio0 = H5TQ4G63AFR_PHY_FIFO_WE,
+	.datawrsratio0 = H5TQ4G63AFR_PHY_WR_DATA,
+};
+
+static const struct cmd_control ddr3_ok335x_cmd_ctrl_data = {
+	.cmd0csratio = H5TQ4G63AFR_RATIO,
+	.cmd0iclkout = H5TQ4G63AFR_INVERT_CLKOUT,
+
+	.cmd1csratio = H5TQ4G63AFR_RATIO,
+	.cmd1iclkout = H5TQ4G63AFR_INVERT_CLKOUT,
+
+	.cmd2csratio = H5TQ4G63AFR_RATIO,
+	.cmd2iclkout = H5TQ4G63AFR_INVERT_CLKOUT,
+};
+
+static struct emif_regs ddr3_ok335x_emif_reg_data = {
+	.sdram_config = H5TQ4G63AFR_EMIF_SDCFG,
+	.ref_ctrl = H5TQ4G63AFR_EMIF_SDREF,
+	.sdram_tim1 = H5TQ4G63AFR_EMIF_TIM1,
+	.sdram_tim2 = H5TQ4G63AFR_EMIF_TIM2,
+	.sdram_tim3 = H5TQ4G63AFR_EMIF_TIM3,
+	.zq_config = H5TQ4G63AFR_ZQ_CFG,
+	.emif_ddr_phy_ctlr_1 = H5TQ4G63AFR_EMIF_READ_LATENCY,
+};
+
 #define OSC    (V_OSCK/1000000)
 const struct dpll_params dpll_ddr = {
 		400, OSC-1, 1, -1, -1, -1, -1};
-
+const struct dpll_params ok335x_dpll_ddr = {
+		400, OSC-1, 1, -1, -1, -1, -1
+};
 const struct dpll_params *get_dpll_ddr_params(void)
 {
 	return &dpll_ddr;
@@ -85,10 +115,20 @@ const struct ctrl_ioregs ioregs = {
 	.dt1ioctl		= K4B2G1646EBIH9_IOCTRL_VALUE,
 };
 
+const struct ctrl_ioregs ok335x_ioregs = {
+	.cm0ioctl		= H5TQ4G63AFR_IOCTRL_VALUE,
+	.cm1ioctl		= H5TQ4G63AFR_IOCTRL_VALUE,
+	.cm2ioctl		= H5TQ4G63AFR_IOCTRL_VALUE,
+	.dt0ioctl		= H5TQ4G63AFR_IOCTRL_VALUE,
+	.dt1ioctl		= H5TQ4G63AFR_IOCTRL_VALUE,
+};
+
 void sdram_init(void)
 {
-	config_ddr(400, &ioregs, &ddr3_data,
-		   &ddr3_cmd_ctrl_data, &ddr3_emif_reg_data, 0);
+	/* config_ddr(400, &ioregs, &ddr3_data, */
+		   /* &ddr3_cmd_ctrl_data, &ddr3_emif_reg_data, 0); */
+	config_ddr(400, &ok335x_ioregs, &ddr3_ok335x_data,
+		   &ddr3_ok335x_cmd_ctrl_data, &ddr3_ok335x_emif_reg_data, 0);
 }
 #endif
 
