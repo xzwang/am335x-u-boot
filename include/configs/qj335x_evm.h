@@ -71,7 +71,6 @@
 	"dtbaddr=0x80200000\0" \
 	"bootdir=/boot\0" \
 	"bootfile=zImage\0" \
-	"dtbfile=am335x-base0033.dtb\0" \
 	"console=ttyO0,115200n8\0" \
 	"mtdids=" MTDIDS_DEFAULT "\0" \
 	"mtdparts=" MTDPARTS_DEFAULT "\0" \
@@ -101,7 +100,7 @@
 	"ubiboot=echo Booting from nand (ubifs) ...; " \
 		"run ubiargs; run ubiload; " \
 		"bootz ${loadaddr} - ${dtbaddr}\0" \
-
+/*
 #define CONFIG_BOOTCOMMAND \
 	"mmc dev ${mmcdev}; if mmc rescan; then " \
 		"echo SD/MMC found on device ${mmcdev};" \
@@ -119,7 +118,7 @@
 	"else " \
 		"run ubiboot;" \
 	"fi;" \
-
+*/
 /* Max number of command args */
 #define CONFIG_SYS_MAXARGS		16
 
