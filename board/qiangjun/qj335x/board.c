@@ -157,7 +157,13 @@ static struct cpsw_slave_data cpsw_slaves[] = {
 		.slave_reg_ofs	= 0x208,
 		.sliver_reg_ofs	= 0xd80,
 		.phy_id		= 0,
-		.phy_if		= PHY_INTERFACE_MODE_RMII,
+		.phy_if		= PHY_INTERFACE_MODE_RGMII,
+	},
+	{
+		.slave_reg_ofs  = 0x308,
+		.sliver_reg_ofs = 0xdc0,
+		.phy_id         = 1,
+		.phy_if		= PHY_INTERFACE_MODE_RGMII,
 	},
 };
 
@@ -200,14 +206,35 @@ int board_eth_init(bd_t *bis)
 			eth_setenv_enetaddr("ethaddr", mac_addr);
 	}
 
-	writel((GMII1_SEL_RMII | RMII1_IO_CLK_EN),
-	       &cdev->miisel);
+	/* writel((GMII1_SEL_RMII | RMII1_IO_CLK_EN), */
+	       /* &cdev->miisel); */
+	writel(RGMII_MODE_ENABLE | RGMII_INT_DELAY, &cdev->miisel);
 
 	rv = cpsw_register(&cpsw_data);
 	if (rv < 0)
 		printf("Error %d registering CPSW switch\n", rv);
 	else
 		ret += rv;
+#define AR8051_PHY_DEBUG_ADDR_REG       0x1d
+#define AR8051_PHY_DEBUG_DATA_REG       0x1e
+#define AR8051_DEBUG_RGMII_CLK_DLY_REG  0x5
+#define AR8051_RGMII_TX_CLK_DLY         0x100
+	{
+	char *phy;
+	uint16_t val;
+	uint32_t i;
+        phy = miiphy_get_current_dev();
+        miiphy_write(phy, 0x0, AR8051_PHY_DEBUG_ADDR_REG,
+                        AR8051_DEBUG_RGMII_CLK_DLY_REG);
+        miiphy_write(phy, 0x0, AR8051_PHY_DEBUG_DATA_REG,
+                        AR8051_RGMII_TX_CLK_DLY);
+
+	/* for (i = 0; i < 0x14; i++) { */
+		/* miiphy_read(phy, 0x0, i, */
+			/* &val); */
+		/* printf("PHY [%x] = %04x\n", i, val); */
+	/* } */
+	}
 
 	return ret;
 }

@@ -287,4 +287,6 @@
 #define CONFIG_SKIP_LOWLEVEL_INIT
 #endif
 
+#define CONFIG_MII
+#define CONFIG_CMD_MII
 #endif	/* ! __CONFIG_IGEP0033_H */
