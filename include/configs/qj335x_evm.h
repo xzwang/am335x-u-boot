@@ -48,9 +48,9 @@
 /* Commands to include */
 #include <config_cmd_default.h>
 
-#define CONFIG_CMD_ASKENV
-#define CONFIG_CMD_BOOTZ
-#define CONFIG_CMD_DHCP
+#undef CONFIG_CMD_ASKENV
+#undef CONFIG_CMD_BOOTZ
+#undef CONFIG_CMD_DHCP
 #define CONFIG_CMD_ECHO
 #define CONFIG_CMD_EXT4
 #define CONFIG_CMD_FAT
@@ -91,7 +91,8 @@
 		"rootfstype=${ubirootfstype}\0" \
 	"nfsargs=setenv bootargs console=${console} " \
 		"root=/dev/nfs rw " \
-		"nfsroot=192.168.97.7:/home/xzwang/nfs ip=192.168.97.6\0" \
+		"nfsroot=192.168.97.7:/home/xzwang/nfs " \
+		"ip=192.168.97.6:::::eth0:off\0 " \
 	"bootenv=uEnv.txt\0" \
 	"loadbootenv=load mmc ${mmcdev} ${loadaddr} ${bootenv}\0" \
 	"importbootenv=echo Importing environment from mmc ...; " \
