@@ -21,8 +21,8 @@
 #include <asm/arch/omap.h>
 
 /* Mach type */
-#define MACH_TYPE_IGEP0033		4521	/* Until the next sync */
-#define CONFIG_MACH_TYPE		MACH_TYPE_IGEP0033
+#define MACH_TYPE_TIAM335EVM		3589
+#define CONFIG_MACH_TYPE		MACH_TYPE_TIAM335EVM
 
 /* Clock defines */
 #define V_OSCK				24000000  /* Clock output from T2 */
@@ -34,6 +34,10 @@
 #define CONFIG_SYS_HUSH_PARSER		/* use "hush" command parser */
 #define CONFIG_SYS_PROMPT		"U-Boot# "
 #define CONFIG_SYS_NO_FLASH
+
+#define CONFIG_CMDLINE_TAG              /* enable passing of ATAGs */
+#define CONFIG_SETUP_MEMORY_TAGS
+#define CONFIG_INITRD_TAG               /* Required for ramdisk support */
 
 /* Display cpuinfo */
 #define CONFIG_DISPLAY_CPUINFO
@@ -85,6 +89,9 @@
 	"ubiargs=setenv bootargs console=${console} " \
 		"root=${ubiroot} " \
 		"rootfstype=${ubirootfstype}\0" \
+	"nfsargs=setenv bootargs console=${console} " \
+		"root=/dev/nfs rw " \
+		"nfsroot=192.168.97.7:/home/xzwang/nfs ip=192.168.97.6\0" \
 	"bootenv=uEnv.txt\0" \
 	"loadbootenv=load mmc ${mmcdev} ${loadaddr} ${bootenv}\0" \
 	"importbootenv=echo Importing environment from mmc ...; " \
@@ -97,28 +104,16 @@
 	"mmcboot=echo Booting from mmc ...; " \
 		"run mmcargs; " \
 		"bootz ${loadaddr} - ${dtbaddr}\0" \
+	"nfsboot=echo Booting form NFS...; " \
+		"run nfsargs; " \
+		"tftp 0x82000000 uImage;bootm 0x82000000;\0" \
 	"ubiboot=echo Booting from nand (ubifs) ...; " \
 		"run ubiargs; run ubiload; " \
 		"bootz ${loadaddr} - ${dtbaddr}\0" \
-/*
+
 #define CONFIG_BOOTCOMMAND \
-	"mmc dev ${mmcdev}; if mmc rescan; then " \
-		"echo SD/MMC found on device ${mmcdev};" \
-		"if run loadbootenv; then " \
-			"echo Loaded environment from ${bootenv};" \
-			"run importbootenv;" \
-		"fi;" \
-		"if test -n $uenvcmd; then " \
-			"echo Running uenvcmd ...;" \
-			"run uenvcmd;" \
-		"fi;" \
-		"if run mmcload; then " \
-			"run mmcboot;" \
-		"fi;" \
-	"else " \
-		"run ubiboot;" \
-	"fi;" \
-*/
+	"run nfsboot;\0 " \
+
 /* Max number of command args */
 #define CONFIG_SYS_MAXARGS		16
 
